@@ -34,71 +34,88 @@ void func4(){
 int main(){
     pthread_attr_t attr;
     pthread_attr_init( &attr );
+    pid_t child1, child2, child3;
 
-    //Timer for task 2
-    struct sched_param parm;
-    parm.sched_priority = 255;
-    pthread_attr_setschedparam(&attr, &parm);
+    if ((child1 = fork()) == 0)
+    {
+        struct sigevent sig2;
+        sig2.sigev_notify = SIGEV_THREAD;
+        sig2.sigev_notify_function = func2;
+        sig2.sigev_value.sival_int = 42;
+        sig2.sigev_notify_attributes = &attr;
 
-    struct sigevent sig2;
-    sig2.sigev_notify = SIGEV_THREAD;
-    sig2.sigev_notify_function = func2;
-    sig2.sigev_value.sival_int = 42;
-    sig2.sigev_notify_attributes = &attr;
+        timer_t timerid2;
+        timer_create(CLOCK_REALTIME, &sig2, &timerid2);
 
-    timer_t timerid2;
-    timer_create(CLOCK_REALTIME, &sig2, &timerid2);
+        struct itimerspec in2, out2;
+        in2.it_value.tv_sec = 0;
+        in2.it_value.tv_nsec = 2;
+        in2.it_interval.tv_sec = 2;
+        in2.it_interval.tv_nsec = 0;
 
-    struct itimerspec in2, out2;
-    in2.it_value.tv_sec = 0;
-    in2.it_value.tv_nsec = 2;
-    in2.it_interval.tv_sec = 2;
-    in2.it_interval.tv_nsec = 0;
+        timer_settime(timerid2, 0, &in2, &out2);
 
-    timer_settime(timerid2, 0, &in2, &out2);
+        //We test the program during a cycle
+        sleep(12);
 
-    //Timer for task 3
-    struct sigevent sig3;
-    sig3.sigev_notify = SIGEV_THREAD;
-    sig3.sigev_notify_function = func3;
-    sig3.sigev_value.sival_int = 42;
-    sig3.sigev_notify_attributes = &attr;
+        timer_delete(timerid2);
 
-    timer_t timerid3;
-    timer_create(CLOCK_REALTIME, &sig3, &timerid3);
+        _exit(0);
+    }
+    if ((child2 = fork()) == 0)
+    {
+        struct sigevent sig3;
+        sig3.sigev_notify = SIGEV_THREAD;
+        sig3.sigev_notify_function = func3;
+        sig3.sigev_value.sival_int = 42;
+        sig3.sigev_notify_attributes = &attr;
 
-    struct itimerspec in3, out3;
-    in3.it_value.tv_sec = 0;
-    in3.it_value.tv_nsec = 3;
-    in3.it_interval.tv_sec = 3;
-    in3.it_interval.tv_nsec = 0;
+        timer_t timerid3;
+        timer_create(CLOCK_REALTIME, &sig3, &timerid3);
 
-    timer_settime(timerid3, 0, &in3, &out3);
+        struct itimerspec in3, out3;
+        in3.it_value.tv_sec = 0;
+        in3.it_value.tv_nsec = 3;
+        in3.it_interval.tv_sec = 3;
+        in3.it_interval.tv_nsec = 0;
 
-    //Timer for task 4
-    struct sigevent sig4;
-    sig4.sigev_notify = SIGEV_THREAD;
-    sig4.sigev_notify_function = func4;
-    sig4.sigev_value.sival_int = 42;
-    sig4.sigev_notify_attributes = &attr;
+        timer_settime(timerid3, 0, &in3, &out3);
 
-    timer_t timerid4;
-    timer_create(CLOCK_REALTIME, &sig4, &timerid4);
+        //We test the program during a cycle
+        sleep(12);
 
-    struct itimerspec in4, out4;
-    in4.it_value.tv_sec = 0;
-    in4.it_value.tv_nsec = 4;
-    in4.it_interval.tv_sec = 4;
-    in4.it_interval.tv_nsec = 0;
+        timer_delete(timerid3);
 
-    timer_settime(timerid4, 0, &in4, &out4);
+        _exit(0);
+    }
+    if ((child3 = fork()) == 0)
+    {
+        struct sigevent sig4;
+        sig4.sigev_notify = SIGEV_THREAD;
+        sig4.sigev_notify_function = func4;
+        sig4.sigev_value.sival_int = 42;
+        sig4.sigev_notify_attributes = &attr;
 
-    //We test the program during a cycle
+        timer_t timerid4;
+        timer_create(CLOCK_REALTIME, &sig4, &timerid4);
+
+        struct itimerspec in4, out4;
+        in4.it_value.tv_sec = 0;
+        in4.it_value.tv_nsec = 4;
+        in4.it_interval.tv_sec = 4;
+        in4.it_interval.tv_nsec = 0;
+
+        timer_settime(timerid4, 0, &in4, &out4);
+
+        //We test the program during a cycle
+        sleep(12);
+
+        timer_delete(timerid4);
+
+        _exit(0);
+    }
+
     sleep(12);
-
-    timer_delete(timerid2);
-    timer_delete(timerid3);
-    timer_delete(timerid4);
 
     return 0;
 }
