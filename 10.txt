@@ -1,0 +1,2 @@
+L'exécutio est bien déterministe, car l'ordre des tâches exécutées 
+est toujours défini dans le programme de manière séquentielle

@@ -1,0 +1,7 @@
+Lorsqu'on augmente la vitesse d'exécution du processuer, notre programme ne peut plus fonctionner correctement.
+En effet, le temps de travail est totalement dépendant de la vitesse du processeur (plus le processeur est rapide
+plus le travail sera cours) tandis que la durée des périodes pour chaque tâche est indépendante et doit rester la même
+quelque soit la vitesse.
+
+Pour résoudre le problème, il faut insérer entre chaque travail des pauses dont le temps devra être calculé indépendamment
+de la vitesse du processeur et donc empêcher l'exécution d'une tâche avant que ce temps d'attente ait été exécuté
