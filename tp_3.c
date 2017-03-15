@@ -16,14 +16,13 @@ void do_work(unsigned int duration){
 void signal_handler()
 {
     printf("Debut traitement signal\n");
-	//do_work(5000);
+	do_work(5000);
     printf("####Fin du traitement du signal\n");
 }
 
 int main()
 {
     printf("%d\n", getpid());
-    int i = 0;
     signal(SIGUSR1, signal_handler);
 
 	pause();
